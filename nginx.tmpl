@@ -120,11 +120,12 @@ server {
     }
 
     location ~ (.+\.(php|html))(.*)$ {
-        fastcgi_split_path_info ^(.+\.(php|html))(/.+)$;
-        fastcgi_index index.html;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_pass {{ trim $upstream_name }};
+        try_files $uri $uri/ =404;
+
         include fastcgi_params;
+        fastcgi_pass {{ trim $upstream_name }};
+        fastcgi_index index.html;
+        fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
     }
 }
 {{ end }}
